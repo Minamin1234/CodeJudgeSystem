@@ -1,0 +1,170 @@
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "C/C++: g++-11 アクティブなファイルのビルド",
+            "command": "/usr/local/bin/g++-11",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "デバッガーによって生成されたタスク。"
+        },
+        {
+            "label": "C++のビルド",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            },
+            "command": "/usr/local/bin/g++-11",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}"
+            ],
+            "problemMatcher":"$msCompile"
+
+        },
+        {
+            "label": "C++のビルドと実行",
+            "command": "${fileDirname}/${fileBasenameNoExtension}",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            },
+            "args": [],
+            "dependsOrder": "sequence",
+            "dependsOn": ["C++のビルド"],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "C++のビルド(Win)",
+            "command": "C:/gcc/mingw64/bin/g++.exe",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            },
+            "type": "shell",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}"
+            ],
+            "problemMatcher":"$msCompile"
+        },
+        {
+            "label": "C++のビルドと実行(Win)",
+            "command": "${fileDirname}/${fileBasenameNoExtension}",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            },
+            "type": "shell",
+            "args": [],
+            "dependsOrder": "sequence",
+            "dependsOn": ["C++のビルド(Win)"],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "C# .NET 5.0のプロジェクトを作成",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            },
+            "command": "dotnet",
+            "type": "shell",
+            "args": ["new","console","--framework","net5.0","-n","${input:Project Name}","-o","${input:Projectpath}${pathSeparator}${input:Project Name}"],
+            "problemMatcher":"$msCompile"
+        },
+        {
+            "label": "C#の実行",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            },
+            "command": "dotnet",
+            "type": "shell",
+            "args": ["run","--project","${fileDirname}"],
+            "problemMatcher":"$msCompile"
+        },
+        {
+            "label": "Rubyの実行",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            },
+            "command": "Ruby",
+            "type": "shell",
+            "args": ["${file}"],
+            "problemMatcher":"$msCompile"
+        },
+        {
+            "label": "ログ",
+            "command": "echo",
+            "type": "shell",
+            "args": ["Hello"],
+            "problemMatcher":"$msCompile"
+        }
+    ],
+    "inputs": 
+    [
+        {
+            "id": "Projectpath",
+            "description": "プロジェクトを配置する場所",
+            "default": "${fileDirname}",
+            "type": "promptString"
+        },
+        {
+            "id": "Project Name",
+            "description": "プロジェクト名",
+            "default": "01",
+            "type": "promptString"
+        }
+    ],
+    "version": "2.0.0"
+}
