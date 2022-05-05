@@ -6,9 +6,6 @@ using namespace std;
 
 #define INPUTFILENAME argv[1]
 
-//生成するテストケース数
-int Cases = 10;
-
 //生成される際に呼ばれる関数
 //テストケースを生成する内容を定義します
 string Generate()
@@ -27,12 +24,6 @@ int main(int argc,char *argv[])
 
     if(input)
     {
-        /*
-        for(int i = 0;i < Cases;i++)
-        {
-            input << Generate() << endl;
-        }
-        */
        input << Generate() << endl;
     }
     else

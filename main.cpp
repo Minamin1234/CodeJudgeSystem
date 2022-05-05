@@ -11,85 +11,75 @@ using namespace std;
 #define TLE "TLE"
 #define CE "CE"
 
-//提出コードの実行時間制限
-const int TLELimit = 2000;
-
-//ジャッジ側で問題を解く際に呼ばれます。ここで愚直解で解きます。
-//解いた結果を配列に格納して返します。
-vector<string> On_Solve(ifstream &input)
+//テストケース毎の判定結果を格納するための構造体。
+struct S_JudgeResults
 {
-    vector<string> Ans;
-    string res = "";
-    int N;
-    input >> N;
-    N *= 10;
-    Ans.push_back(to_string(N));
-    return Ans;
+    string Name = "";
+    string Judge = NONE;
+    int Time = 0;
+};
+
+//テストケースの回数(個数)
+const int TestCases = 10;
+
+void On_EndedAllJudges(vector<S_JudgeResults> &judgeresults,string &totaljudge)
+{
+    int timesum = 0;
+    for(auto jr : judgeresults)
+    {
+        timesum += jr.Time;
+    }
+    int ave = timesum / judgeresults.size();
+    cout << "AllJudge is ended." << endl;
+    for(auto jr : judgeresults)
+    {
+        cout << "TestCase-" << jr.Name << endl;
+        cout << "Judge: " << jr.Judge << ",Time: " << jr.Time << "ms." << endl;
+    }
+    cout << "Total Judge:" << totaljudge << "," << "TimeAve.: " << ave << "ms." << endl;
 }
 
-//ジャッジ終了時に呼ばれます。
-void On_EndedJudge(string &judge,int &time)
-{
-    cout << "TestCase ended. Judge: " << judge << ", Time: " << time << "ms" << endl;
-}
 
 int main(int argc,char *argv[])
 {
-    //提出コードの実行開始時刻、終了時刻
-    time_t start,end;
-    //提出コードの実行時間(ms?)
-    int time = 0;
-    //ジャッジ判定
-    string Judge = NONE;
-
-    //ジェネレータをコンパイル
-    system("g++-11 gen.cpp -o gen.exe");
-    //コンパイルしたジェネレータを実行して、input.txtを書き加える。
-    system("./gen.exe input.txt");
-    //入力例を格納したテキストファイル
-    ifstream inputifs("input.txt"); //書き加えたinput.txtを開く。
-
-    //採点対象のソースコードをコンパイル
-    if(system("g++-11 test.cpp -o test.exe") != 0)
+    vector<S_JudgeResults> JudgeResults;
+    string TotalAC = AC;
+    vector<string> TestInputs;
+    ofstream judgeresofs("JudgeResults.txt");
+    if(!judgeresofs)
     {
-        Judge = CE;
-        On_EndedJudge(Judge,time);
+        cout << "Error: JudgeResult.txt cannot open." << endl;
         return 0;
     }
-
-    start = clock();
-    //生成した入力例をソースコードを実行し、結果をテキストファイルとして格納する。
-    system("./test.exe < input.txt > result.txt");
-    end = clock();
-    time = (int)(end - start);
-    if(time > TLELimit)
+    system("g++-11 judge.cpp -o judge.exe");
+    for(int t = 1; t <= TestCases;t++)
     {
-        Judge = TLE;
-        On_EndedJudge(Judge,time);
-        return 0;
-    }
-
-    //提出コードの出力結果
-    ifstream ansifs("result.txt");
-
-    //ジャッジ側で解いた解答。
-    auto Ans = On_Solve(inputifs);
-
-    //ジャッジ側で解いた結果と照らし合わせて判定する
-    for(auto ans : Ans)
-    {
-        string res;
-        ansifs >> res;
-        if(ans != res || res == "") //答えが違っていたのでWAを返します。
+        system("./judge.exe > tmp.txt");
+        ifstream resifs("tmp.txt");
+        //１行目:判定結果
+        //２行目:実行時間(ms)
+        string judge;
+        int time = 0;
+        resifs >> judge >> time;
+        if(judge != AC)
         {
-            Judge = WA;
-            On_EndedJudge(Judge,time);
-            return 0;
+            if(judge == CE)
+            {
+                TotalAC = judge;
+                On_EndedAllJudges(JudgeResults,TotalAC);
+                return 0;
+            }
+            else if(judge == WA) TotalAC = WA;
+            else TotalAC = judge;
         }
+        S_JudgeResults result = {"",judge,time};
+        JudgeResults.push_back(result);
     }
-    //合っていたのでACを返す。
-    Judge = AC;
-    On_EndedJudge(Judge,time);
-
+    judgeresofs << "JudgeResults" << endl;
+    for(auto jr : JudgeResults)
+    {
+        judgeresofs << "Judge: " << jr.Judge << ",Time: " << jr.Time << "ms." << endl;
+    }
+    On_EndedAllJudges(JudgeResults,TotalAC);
     return 0;
 }
