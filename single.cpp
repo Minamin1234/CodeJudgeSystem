@@ -54,5 +54,5 @@ bool Execute(string exepath,string testcasepath,string out)
 
 int main(int argc,char *argv[])
 {
-    Generate(GENPATH,rwsr)
+    return 0;
 }
