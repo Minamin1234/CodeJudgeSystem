@@ -34,7 +34,7 @@ bool Compile(string path,string exename="a.exe",string compiler=COMPILERPATH)
 bool Generate(string genpath,string out)
 {
     string res = "";
-    res += genpath + " > ";
+    res += genpath + " ";
     res += out;
     int code = system(res.c_str());
     return (code == 0);
