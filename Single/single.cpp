@@ -58,7 +58,10 @@ bool Execute(string exepath,string testcasepath,string out)
 vector<string> GetAns(ifstream &input)
 {
     vector<string> Ans;
-
+    int N;
+    input >> N;
+    N *= 10;
+    Ans.push_back(to_string(N));
     return Ans;
 }
 
