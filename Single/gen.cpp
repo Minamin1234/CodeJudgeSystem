@@ -21,7 +21,7 @@ int main(int argc,char *argv[])
 {
     //テストケース用の入力値リスト
     ofstream input(INPUTFILENAME);
-
+    //cout << "INPUTFILENAME: " << INPUTFILENAME << endl;
     if(input)
     {
        input << Generate() << endl;
