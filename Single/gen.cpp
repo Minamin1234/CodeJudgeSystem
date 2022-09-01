@@ -4,7 +4,7 @@ using namespace std;
 //コンパイル: (カレントディレクトリを設定してから) [g++-11 main.cpp]
 //引数を渡して実行: (コンパイル後) [./a.out ./input.txt ./output.txt]
 
-#define INPUTFILENAME argv[1]
+#define INPUTFILENAME argv[1] //テストケースの出力先
 
 //生成される際に呼ばれる関数
 //テストケースを生成する内容を定義します
@@ -15,6 +15,9 @@ using namespace std;
 //問題2
 //整数a bが与えられます。a + bの結果を出力してください。
 //0 <= a,b <= 10
+
+//テストケースを生成する際に呼ばれます。
+//ランダムなテストケースを定義します。
 string Generate()
 {
     /*
