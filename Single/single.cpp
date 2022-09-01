@@ -37,7 +37,7 @@ const string MSG_GENERATORERROR = "Error: Can't generate testcase.";          //
 const string MSG_SOLVEPROGRAMERROR = "Error: Can't execute solve program.";   //ジャッジ側で解くプログラムの実行に失敗した際のメッセージ(解答プログラムに問題があります)
 
 //ジャッジが終了した際に呼ばれます。
-void On_Ended_Judge(string judge,int &time,string msg="")
+void On_Ended_Judge(const string judge,const int &time,const string msg="")
 {
     cout << msg << endl;
     vector<string> res;

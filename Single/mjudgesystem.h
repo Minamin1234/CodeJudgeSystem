@@ -14,11 +14,15 @@ const string CE = "CE";
 const string RE = "RE";
 const string ER = "ER";
 
-bool Compile(string cpppath,string exename,string compiler);
-bool Generate(string genexepath,string textcasepath);
-bool Execute(string testexepath,string testcasepath,string temppath);
+void print(string s);
+void print(const bool b);
+void print(const int i);
+bool Compile(const string cpppath,const string exename,const string compiler);
+bool Generate(const string genexepath,const string textcasepath);
+bool Execute(const string testexepath,const string testcasepath,const string temppath);
 bool IsCorrect(vector<string> &ans,ifstream &temp);
-void OutputResult(vector<string> &res,string resultpath);
+bool IsCorrect(ifstream &ans,ifstream &temp);
+void OutputResult(vector<string> &res,const string resultpath);
 
 //文字列を出力します。
 void print(string s)
@@ -27,20 +31,20 @@ void print(string s)
 }
 
 //bool値に応じてTrueまたはFalseを返します。
-void print(bool b)
+void print(const bool b)
 {
     cout << (b ? "True" : "False") << endl;
 }
 
 //整数値を出力します。
-void print(int i)
+void print(const int i)
 {
     cout << i << endl;
 }
 
 //指定したcppファイルをコンパイルします。
 //return: コンパイルに成功したかどうか
-bool Compile(string cpppath,string exename,string compiler)
+bool Compile(const string cpppath,const string exename,const string compiler)
 {
     cout << "Compile" << endl;
     string res = "";
@@ -54,7 +58,7 @@ bool Compile(string cpppath,string exename,string compiler)
 
 //ジェネレータからテストケースを生成します。
 //return: テストケースの生成に成功したかどうか
-bool Generate(string genexepath,string textcasepath)
+bool Generate(const string genexepath,const string textcasepath)
 {
     cout << "Generate testcase" << endl;
     string res = "";
@@ -67,7 +71,7 @@ bool Generate(string genexepath,string textcasepath)
 
 //コンパイルした採点対象プログラムを実行しテストケースを入力させ、出力結果を格納します。
 //return: 採点対象プログラムの実行に成功したかどうか
-bool Execute(string testexepath,string testcasepath,string temppath)
+bool Execute(const string testexepath,const string testcasepath,const string temppath)
 {
     cout << "Execute program" << endl;
     string res = "";
@@ -111,7 +115,7 @@ bool IsCorrect(ifstream &ans,ifstream &temp)
 }
 
 //判定結果をテキストファイルに出力します。
-void OutputResult(vector<string> &res,string resultpath)
+void OutputResult(vector<string> &res,const string resultpath)
 {
     ofstream result(resultpath);
     if(!result) return;
