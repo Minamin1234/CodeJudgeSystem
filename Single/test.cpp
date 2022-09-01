@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-
+#include <unistd.h>
 using namespace std;
 //コンパイル: (カレントディレクトリを設定してから) [g++-11 main.cpp]
 //引数を渡して実行: (コンパイル後) [./a.out ./input.txt ./output.txt]
@@ -20,5 +20,6 @@ int main(int argc,char *argv[])
     int a,b;
     cin >> a >> b;
     cout << a + b << endl;
+    //sleep(3);
     return 0;
 }

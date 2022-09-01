@@ -50,11 +50,11 @@ void On_Ended_Judge(const string judge,const int &time,const string msg="")
 
 int main(int argc,char *argv[])
 {
-    //Args: [-] [maincpp_path] [gencpp_path] [compiler_path]
+    //Args: [-] [maincpp_path] [gencpp_path] [compiler_path] [timelimit]
     string CPPPATH = argv[1];
     string GENCPPPATH = argv[2];
-    string COMPPATH = COMPILERPATH;
-    if(argc == 4) COMPPATH = argv[3];
+    string COMPPATH = argv[3];
+    int timelimit_ms = stoi(argv[4]);
     time_t start,end;
     int time = 0;
 
@@ -79,7 +79,10 @@ int main(int argc,char *argv[])
     time = (int)(end - start);
 
     if(IsCorrect(Ans,output))
+    {
+        if(time > timelimit_ms) On_Ended_Judge(TLE,time);
         On_Ended_Judge(AC,time);
+    }
     else
         On_Ended_Judge(WA,time);
     return 0;
