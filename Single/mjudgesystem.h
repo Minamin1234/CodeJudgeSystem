@@ -20,6 +20,24 @@ bool Execute(string testexepath,string testcasepath,string temppath);
 bool IsCorrect(vector<string> &ans,ifstream &temp);
 void OutputResult(vector<string> &res,string resultpath);
 
+//文字列を出力します。
+void print(string s)
+{
+    cout << s << endl;
+}
+
+//bool値に応じてTrueまたはFalseを返します。
+void print(bool b)
+{
+    cout << (b ? "True" : "False") << endl;
+}
+
+//整数値を出力します。
+void print(int i)
+{
+    cout << i << endl;
+}
+
 //指定したcppファイルをコンパイルします。
 //return: コンパイルに成功したかどうか
 bool Compile(string cpppath,string exename,string compiler)
@@ -51,17 +69,18 @@ bool Generate(string genexepath,string textcasepath)
 //return: 採点対象プログラムの実行に成功したかどうか
 bool Execute(string testexepath,string testcasepath,string temppath)
 {
-    cout << "Execute test program" << endl;
+    cout << "Execute program" << endl;
     string res = "";
     res += testexepath + " < ";
     res += testcasepath + " > ";
     res += temppath;
+    cout << res << endl;
     int code = system(res.c_str());
     return (code == 0);
 }
 
 //ジャッジ側の解答と提出プログラムの出力結果が合っているかどうかを返します。
-//return: 提出プログラムの出力結果が答えと合っているか
+//return: 提出プログラムの出力結果が解答と合っているか
 bool IsCorrect(vector<string> &ans,ifstream &temp)
 {
     cout << "Judge" << endl;
@@ -71,6 +90,23 @@ bool IsCorrect(vector<string> &ans,ifstream &temp)
         temp >> res;
         if(a != res || res == "") return false;
     }
+    return true;
+}
+
+//ジャッジ側で解いた解答と提出プログラムの出力結果が合っているかどうかを返します。
+//return: 提出プログラムの出力結果が解答と合っているか
+bool IsCorrect(ifstream &ans,ifstream &temp)
+{
+    cout << "Judge" << endl;
+    if(!ans || !temp) return false;
+    string res;
+    while(getline(ans,res))
+    {
+        string a;
+        temp >> a;
+        if(a != res || res == "") return false;
+    }
+
     return true;
 }
 
