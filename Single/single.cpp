@@ -4,6 +4,8 @@
 #include <vector>
 #include <time.h>
 
+#include "ans.cpp"
+
 using namespace std;
 
 const string AC = "AC";
@@ -42,7 +44,6 @@ bool Generate(string genpath,string out)
     res += out;
     cout << res.c_str() << endl;
     int code = system(res.c_str());
-    cout << res.c_str() << endl;
     return (code == 0);
 }
 
@@ -56,17 +57,6 @@ bool Execute(string exepath,string testcasepath,string out)
     res += out;
     int code = system(res.c_str());
     return (code == 0);
-}
-
-//解答をジャッジ側で解かせ、愚直な解答を返します
-vector<string> GetAns(ifstream &input)
-{
-    vector<string> Ans;
-    int N;
-    input >> N;
-    N *= 10;
-    Ans.push_back(to_string(N));
-    return Ans;
 }
 
 //ジャッジ側の解答と提出プログラムの出力結果が合っているかどうかを返します。
@@ -136,7 +126,7 @@ int main(int argc,char *argv[])
 
     cout << "Get Answer" << endl;
     ifstream input(TESTCASEPATH);
-    vector<string> Ans = GetAns(input);
+    vector<string> Ans = On_Solve(input);
 
     cout << "Execute" << endl;
     start = clock();
@@ -167,7 +157,6 @@ int main(int argc,char *argv[])
     OutputResult(Result,RESULTPATH);
 
     //Execute(TESTPATH,TESTCASEPATH,TEMPPATH);
-
     //ifstream ifs(TESTCASEPATH);
     //ifstream out(TEMPPATH);
     //auto ans = GetAns(ifs);

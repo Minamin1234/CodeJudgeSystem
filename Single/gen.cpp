@@ -8,11 +8,25 @@ using namespace std;
 
 //生成される際に呼ばれる関数
 //テストケースを生成する内容を定義します
+
+//問題1
+//整数nが与えられます。nを10倍した数を出力してください。
+
+//問題2
+//整数a bが与えられます。a + bの結果を出力してください。
+//0 <= a,b <= 10
 string Generate()
 {
+    /*
     random_device r;
     string s = to_string(r() % 11);
+    */
     //s = to_string(r() % 11);
+
+    random_device rd;
+    string s = to_string(rd() % 11);
+    s += "\n";
+    s += to_string(rd() % 11);
     return s;
 }
 
