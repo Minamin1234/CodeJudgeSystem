@@ -38,7 +38,9 @@ int main(int argc,char *argv[])
     //cout << "INPUTFILENAME: " << INPUTFILENAME << endl;
     if(input)
     {
-       input << Generate() << endl;
+        string s = Generate();
+        input << s << endl;
+        cout << s << endl;
     }
     else
     {

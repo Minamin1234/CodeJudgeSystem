@@ -1,20 +1,16 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
-#include <time.h>
-
+#include "mjudgesystem.h"
 #include "ans.cpp"
 
 using namespace std;
-
-const string AC = "AC";
-const string WA = "WA";
-const string TLE = "TLE";
-const string CE = "CE";
-const string RE = "RE";
-const string ER = "ER";
-
+//必要なファイル
+/*
+- test.cpp (採点対象のプログラムファイル)
+- ans.cpp (定義してある事)
+- gen.cpp (定義してある事)
+- testcase.txt
+- temp.txt
+- result.txt
+*/
 const string CPPEXE = "test.exe";                        //採点対象のプログラムをコンパイル後の名称
 const string GENEXE = "gen.exe";                         //ジェネレータプログラムをコンパイル後の名称
 const string COMPILERPATH = "C:/gcc/mingw64/bin/g++.exe";//コンパイラーのパス(デフォルト)
@@ -23,64 +19,16 @@ const string TESTCASEPATH = "./testcase.txt";            //テストケースを
 const string TEMPPATH = "./temp.txt";                    //採点対象のプログラムから出力結果を格納するテキストファイルのパス
 const string RESULTPATH = "./result.txt";                //採点結果を格納するテキストファイルのパス
 
-//指定したcppファイルをコンパイルします。
-//return: コンパイルに成功したかどうか
-bool Compile(string path,string exename="a.exe",string compiler="g++")
+//ジャッジが終了した際に呼ばれます。
+void On_Ended_Judge(string judge,int &time,string msg="")
 {
-    string res = "";
-    res += compiler + " ";
-    res += path + " ";
-    res += "-o " + exename;
-    cout << res << endl;
-    int code = system(res.c_str());
-    return (code == 0);
-}
+    cout << msg << endl;
+    vector<string> res;
+    res.push_back(judge);
+    res.push_back(to_string(time));
+    OutputResult(res,RESULTPATH);
 
-//ジェネレータから出力結果を格納します。
-bool Generate(string genpath,string out)
-{
-    string res = "";
-    res += genpath + " ";
-    res += out;
-    cout << res.c_str() << endl;
-    int code = system(res.c_str());
-    return (code == 0);
-}
-
-//コンパイルした採点対象プログラムを実行し入力させ、出力結果を格納します。
-//return: 実行が成功したかどうか
-bool Execute(string exepath,string testcasepath,string out)
-{
-    string res = "";
-    res += exepath + " < ";
-    res += testcasepath + " > ";
-    res += out;
-    int code = system(res.c_str());
-    return (code == 0);
-}
-
-//ジャッジ側の解答と提出プログラムの出力結果が合っているかどうかを返します。
-bool IsCorrect(vector<string> &ans,ifstream &out)
-{
-    for(auto a : ans)
-    {
-        string res;
-        out >> res;
-        if(a != res || res == "") return false;
-    }
-    return true;
-}
-
-//結果をテキストファイルに出力します。
-void OutputResult(vector<string> &res,string resultpath)
-{
-    ofstream result(resultpath);
-    if(!result) return;
-    for(auto i : res)
-    {
-        result << i << endl;
-    }
-
+    abort();
 }
 
 int main(int argc,char *argv[])
@@ -90,76 +38,30 @@ int main(int argc,char *argv[])
     string GENCPPPATH = argv[2];
     string COMPPATH = COMPILERPATH;
     if(argc == 4) COMPPATH = argv[3];
-    vector<string> Result;
     time_t start,end;
     int time = 0;
 
-    cout << "Compile Generator" << endl;
-    bool res = Compile(GENCPPPATH,GENEXE,COMPPATH);
-    if(!res) 
-    {
-        cout << "Error: Can't compile Generator program." << endl;
-        Result.push_back(ER);
-        OutputResult(Result,RESULTPATH);
-        return 0;
-    }
-
-    cout << "Compile CPP" << endl;
-    res = Compile(CPPPATH,CPPEXE,COMPPATH);
-    if(!res)
-    {
-        cout << "Error: Can't compile cpp program." << endl;
-        Result.push_back(CE);
-        OutputResult(Result,RESULTPATH);
-        return 0;
-    }
-
-    cout << "Generate" << endl;
-    res = Generate(GENEXE,TESTCASEPATH);
-    if(!res)
-    {
-        cout << "Error: Can't generate testcase." << endl;
-        Result.push_back(ER);
-        OutputResult(Result,RESULTPATH);
-        return 0;
-    }
-
-    cout << "Get Answer" << endl;
+    if(!Compile(GENCPPPATH,GENEXE,COMPPATH)) 
+        On_Ended_Judge(ER,time,"Error: Can't compile generator program.");
+    else if(!Compile(CPPPATH,CPPEXE,COMPPATH))
+        On_Ended_Judge(CE,time,"Error: Can't compile cpp program.");
+    else if(!Generate(GENEXE,TESTCASEPATH))
+        On_Ended_Judge(ER,time,"Error: Can't generate testcase.");
+    
     ifstream input(TESTCASEPATH);
     vector<string> Ans = On_Solve(input);
 
-    cout << "Execute" << endl;
     start = clock();
-    res = Execute(CPPEXE,TESTCASEPATH,TEMPPATH);
+    if(!Execute(CPPEXE,TESTCASEPATH,TEMPPATH))
+        On_Ended_Judge(RE,time);
     end = clock();
+
+    ifstream output(TEMPPATH);
     time = (int)(end - start);
-    if(!res)
-    {
-        Result.push_back(RE);
-        Result.push_back(to_string(time));
-        OutputResult(Result,RESULTPATH);
-        return 0;
-    }
 
-    cout << "Judge" << endl;
-    ifstream out(TEMPPATH);
-    res = IsCorrect(Ans,out);
-    if(!res)
-    {
-        Result.push_back(WA);
-        Result.push_back(to_string(time));
-        OutputResult(Result,RESULTPATH);
-        return 0;
-    }
-
-    Result.push_back(AC);
-    Result.push_back(to_string(time));
-    OutputResult(Result,RESULTPATH);
-
-    //Execute(TESTPATH,TESTCASEPATH,TEMPPATH);
-    //ifstream ifs(TESTCASEPATH);
-    //ifstream out(TEMPPATH);
-    //auto ans = GetAns(ifs);
-    //cout << IsCorrect(ans,out) << endl;
+    if(IsCorrect(Ans,output))
+        On_Ended_Judge(AC,time);
+    else
+        On_Ended_Judge(WA,time);
     return 0;
 }
