@@ -1,4 +1,5 @@
-# Code Judge System - MCJS
+# Code Judge System
+MCJSと略してみたり。
 
 ## 概要
 採点対象のプログラムが問題通りの値で出力されているかどうかを採点するプログラム。<br>
